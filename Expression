@@ -1,0 +1,128 @@
+/*	The Expression Class        
+An Expression object holds a character string representing the
+expression being evaluated and keeps track of the character
+currently being scanned.  It has mutually recursive methods for
+evaluating expressions, terms and factors.  The sentinel
+character '$' is appended to the right end of the expression
+so that this character is scanned when the end of the expression
+is reached.
+*/
+
+public class Expression {
+// String holding the expression.
+ private String expr;
+ 
+// Index of the character being scanned.
+ private int posn;
+   
+//  An Expression object is created holding the specified
+//  expression string. Lower case letters in the expression are converted to
+//  upper case and a sentinel character is added to mark
+//  the end of the expression.
+        public Expression(String str) {
+        	String texpr = str.trim();
+            expr = texpr.toUpperCase() + "$";
+            posn = 0;
+        }
+
+        //  Return the character currently being scanned.
+        private char current() {return expr.charAt(posn);}
+        
+        //  Advance the character being scanned. 
+        private void advance() {++posn;}
+
+
+//  This public method calls the private evalExpr
+//  method to evaluate the expression using the
+//  specified environment.  It returns the value
+//  of the expression.  It throws a SyntaxError
+//  if the expression does not use the correct format
+//  or has any whitespace inside of it.
+
+       public double evaluate(Environment env){
+    	   double result;
+    		 if(expr.matches("[a-e|A-E|'*+-/'|'()']+['$']")){
+    			   result = evalExpr(env);
+    		 }else{  throw new SyntaxError();}
+    	     	   
+    	   return result;
+        }
+        
+//  This private method evaluates the expression
+//  starting at the character currently being 
+//  scanned.  It calls evalTerm to evaluate each
+//  term and adds/subtracts the values of the terms
+//  from left to right.  It returns the final sum
+//  when the character being scanned following a term
+//  is neither '+' nor '-'.  It leaves the scanner
+//  pointer at the character following the last term.
+       public double evalExpr(Environment env) {
+       	double nextVal;
+       	double result;
+        
+      	result = this.evalTerm(env);
+      	while(this.current()=='+' || this.current()=='-'){
+      			if(this.current()=='+'){
+      			this.advance();
+      			nextVal = this.evalTerm(env);
+      			result += nextVal;
+      		}else{
+      			this.advance();
+      			nextVal = this.evalTerm(env);
+      			result -= nextVal;	
+      		}
+      	}
+      			
+      	return result;
+      }
+
+//  This private method evaluates the term starting
+//  at the character currently being scanned.  It
+//  calls evalFactor to evaluate each factor and 
+//  multiplies/divides the values of the factors
+//  from left to right.  It returns the final product
+//  when the character being scanned following a factor
+//  is neither '*' nor '/'.  It leaves the scanner
+//  pointer at the character following the last factor.
+      private double evalTerm(Environment env) {
+      	double nextVal;
+      	double result;
+        
+    	  	result = this.evalFactor(env);
+        	while(this.current()=='*' || this.current()=='/'){
+        		if(this.current()=='*'){
+        		this.advance();
+        			nextVal = this.evalFactor(env);
+        			result *= nextVal;
+        		}else{
+        			this.advance();
+        			nextVal = this.evalFactor(env);
+        			result /= nextVal;	
+        		}
+        	}
+        			
+        	return result;
+        }
+
+//  This private method evaluates the factor starting
+//  at the character currently being scanned.  If
+//  this character is a variable it returns the value
+//  of the variable from the specified environment.
+//  If this character is '(' it calls evalExpr to
+//  evaluate the expression inside the parentheses.
+//  In either case it advances the scanner pointer
+//  to the character following the factor.
+      private double evalFactor(Environment env) {
+      	double result = 0;
+    	 
+      	if(this.current() =='('){
+      		this.advance();
+      		result = this.evalExpr(env);
+      	}else {
+      		result = env.lookup(this.current());	
+      	}
+      	
+      		this.advance();
+      		return result;
+      }
+}
