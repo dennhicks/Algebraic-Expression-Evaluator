@@ -1,0 +1,13 @@
+/*The SyntaxError Class
+The optional SyntaxError exception may be thrown whenever
+the code detects a syntax error in an expression. The
+main program can catch this exception to print an error
+message.
+*/
+
+public class SyntaxError extends RuntimeException {
+	private static final long serialVersionUID = -1564533511458167343L;
+
+	public SyntaxError() {super("Invalid expression.");
+    }
+}
