@@ -1,0 +1,48 @@
+/*The Main Class
+This class contains the main method that performs all
+interaction with the user. It reads the variables from the keyboard 
+into an Environment object and then creates and evaluates Expression
+objects for each expression. It terminate when the user enters 
+"Q" instead of an expression.
+*/
+
+import java.util.*;
+
+public class EvalApp {
+	private Scanner kbd;
+	private Environment env;
+	private Expression express;
+	private String user_express;
+	private Double user_val;
+	private String letter = "ABCDE";
+	private double result;
+	
+	public EvalApp(){
+		kbd = new Scanner(System.in);
+		env = new Environment();
+			
+		// Get variable values from user
+		for(int i=0;i<letter.length();i++){
+			System.out.print("Value of " + letter.charAt(i) +"? ");
+			user_val = kbd.nextDouble();
+			env.store(letter.charAt(i), user_val);
+		}
+		// Get expression from user
+		System.out.printf("%n");
+		System.out.print("Expression (Q to quit)? ");
+		user_express = kbd.next();
+		
+		while(!user_express.equalsIgnoreCase("q")){
+			express = new Expression(user_express);
+			result = express.evaluate(env);
+			System.out.println(result);
+			System.out.print("Expression (Q to quit)? ");
+			user_express = kbd.next();			
+		}	
+		
+	}
+	
+	public static void main(String[] args) {
+		new EvalApp();
+	}
+}
