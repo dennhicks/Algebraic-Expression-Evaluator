@@ -1,0 +1,43 @@
+/*The Environment Class
+An Environment object holds the values of the variables A, B, C,
+D and E used while evaluating an expression.
+*/
+
+public class Environment {
+    // Define some fields to hold the values of the variables.
+		private double A,B,C,D,E;
+    	
+   public Environment() {
+	   A=0;B=0;C=0;D=0;E=0;
+   }
+        
+   public void store (char key, double value) {
+   //  Stores the specified value in the variable named by
+   //  the specified key, replacing the previous value of
+   //  that variable.
+	   
+      switch(key){
+        case 'A': A = value;break;
+        case 'B': B = value;break;
+        case 'C': C = value;break;
+        case 'D': D = value;break;
+        case 'E': E = value;break;
+      }
+  }
+        
+   public double lookup (char key) {
+   //  Returns the value currently stored in the variable
+   //  named by the specified key.  Keys are the
+   //  characters 'A' for the variable A, 'B' for the
+   //  variable B, etc.
+       double result = 0;
+        	switch(key){
+        		case 'A': result = A;break;
+        		case 'B': result = B;break; 
+        		case 'C': result = C;break;
+        		case 'D': result = D;break; 
+        		case 'E': result = E;break;
+          }
+       return result;
+   }
+}
